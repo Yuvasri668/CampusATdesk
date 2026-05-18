@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block title %}{{ job.title }} - Recruiter - Job Board & Career Portal{% endblock %}
+
+{% block content %}
+<h1>{{ job.title }}</h1>
+
+<div class="card">
+    <div class="card-header">Job Details</div>
+    <div class="card-body">
+        <p><strong>Description:</strong> {{ job.description or '-' }}</p>
+        <p><strong>Required Skills:</strong> {{ job.required_skills or '-' }}</p>
+        <p><strong>Location:</strong> {{ job.location or '-' }}</p>
+        <p><strong>Job Type:</strong> {{ job.job_type or '-' }}</p>
+        <p><strong>Category:</strong> {{ job.category.name if job.category else '-' }}</p>
+        <p><strong>Created:</strong> {{ job.created_at.strftime('%Y-%m-%d %H:%M') if job.created_at else '-' }}</p>
+    </div>
+</div>
+<a href="{{ url_for('recruiter_job_applications', job_id=job.id) }}">View Applicants</a>
+<a href="{{ url_for('recruiter_jobs') }}">Back to Jobs</a>
+{% endblock %}

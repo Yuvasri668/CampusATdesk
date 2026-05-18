@@ -1,0 +1,168 @@
+{% extends "base.html" %}
+
+{% block title %}
+Recruiters - Admin - Job Board & Career Portal
+{% endblock %}
+
+{% block content %}
+
+<h1>Recruiters</h1>
+
+<p class="admin-subtitle">
+    {{ recruiters|length }} recruiter(s).
+</p>
+
+<a
+    href="{{ url_for('admin_recruiter_create') }}"
+    style="
+        display: inline-block;
+        margin-bottom: 1rem;
+        color: var(--linkedin-blue);
+        font-weight: 600;
+    "
+>
+    Add Recruiter
+</a>
+
+<div class="card">
+
+    <div class="card-header">
+        Recruiters
+    </div>
+
+    <div class="card-body">
+
+        <table class="data-table">
+
+            <thead>
+
+                <tr>
+
+                    <th>ID</th>
+
+                    <th>Username</th>
+
+                    <th>Email</th>
+
+                    <th>Company</th>
+
+                    <th>Status</th>
+
+                    <th>Created</th>
+
+                    <th>Actions</th>
+
+                </tr>
+
+            </thead>
+
+            <tbody>
+
+                {% for r in recruiters %}
+
+                <tr>
+
+                    <td>
+                        {{ r.id }}
+                    </td>
+
+                    <td>
+                        {{ r.username }}
+                    </td>
+
+                    <td>
+                        {{ r.email }}
+                    </td>
+
+                    <td>
+                        {{ r.company.name if r.company else '-' }}
+                    </td>
+
+                    <td>
+
+                        {% if r.is_active %}
+
+                            Active
+
+                        {% else %}
+
+                            Inactive
+
+                        {% endif %}
+
+                    </td>
+
+                    <td>
+
+                        {{ r.created_at.strftime('%Y-%m-%d %H:%M') if r.created_at else '-' }}
+
+                    </td>
+
+                    <td>
+
+                        <!-- ACTIVATE / DEACTIVATE -->
+
+                        {% if r.is_active %}
+
+                        <a href="{{ url_for('admin_recruiter_status', id=r.id) }}">
+
+                            Deactivate
+
+                        </a>
+
+                        {% else %}
+
+                        <a href="{{ url_for('admin_recruiter_status', id=r.id) }}">
+
+                            Activate
+
+                        </a>
+
+                        {% endif %}
+
+                        |
+
+                        <!-- DELETE -->
+
+                        <a
+                            href="{{ url_for('admin_recruiter_delete', id=r.id) }}"
+                            onclick="return confirm('Are you sure you want to delete this recruiter?')"
+                        >
+
+                            Delete
+
+                        </a>
+
+                    </td>
+
+                </tr>
+
+                {% else %}
+
+                <tr>
+
+                    <td colspan="7">
+
+                        No recruiters found.
+
+                    </td>
+
+                </tr>
+
+                {% endfor %}
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+</div>
+
+<a href="{{ url_for('admin_dashboard') }}">
+
+    Back to Dashboard
+
+</a>
+
+{% endblock %}

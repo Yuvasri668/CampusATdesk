@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+
+{% block title %}{{ category.name }} - Admin - Job Board & Career Portal{% endblock %}
+
+{% block content %}
+<h1>{{ category.name }}</h1>
+<p class="admin-subtitle">Category details.</p>
+
+<div class="card">
+    <div class="card-header">Details</div>
+    <div class="card-body">
+        <p><strong>ID:</strong> {{ category.id }}</p>
+        <p><strong>Name:</strong> {{ category.name }}</p>
+        <p><strong>Created:</strong> {{ category.created_at.strftime('%Y-%m-%d %H:%M') if category.created_at else '-' }}</p>
+    </div>
+</div>
+<a href="{{ url_for('admin_category_edit', id=category.id) }}">Edit</a> |
+<a href="{{ url_for('admin_categories') }}">Back to Categories</a>
+{% endblock %}

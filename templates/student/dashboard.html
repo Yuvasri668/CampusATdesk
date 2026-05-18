@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+
+{% block title %}Student Dashboard - Job Board & Career Portal{% endblock %}
+
+{% block content %}
+<h1>Student Dashboard</h1>
+
+<div class="card">
+    <div class="card-header">Applications</div>
+    <div class="card-body">
+        <p class="admin-subtitle">{{ applications|length }} total application(s).</p>
+        <a href="{{ url_for('student_applications') }}" style="margin-right: 1rem;">View all</a>
+        <a href="{{ url_for('student_application_filter') }}">Filter by status</a>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-header">Upcoming interviews</div>
+    <div class="card-body">
+        {% if upcoming_interviews %}
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>Job</th>
+                    <th>Company</th>
+                    <th>Status</th>
+                    <th>Applied</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for app in upcoming_interviews %}
+                <tr>
+                    <td>{{ app.job.title }}</td>
+                    <td>{{ app.job.company.name if app.job.company else '-' }}</td>
+                    <td>{{ app.status }}</td>
+                    <td>{{ app.created_at.strftime('%Y-%m-%d %H:%M') if app.created_at else '-' }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <p>No upcoming interviews.</p>
+        {% endif %}
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-header">Profile</div>
+    <div class="card-body">
+        <p><strong>ID:</strong> {{ user.id }}</p>
+        <p><strong>Username:</strong> {{ user.username }}</p>
+        <p><strong>Email:</strong> {{ user.email }}</p>
+        <p><strong>Created:</strong> {{ user.created_at.strftime('%Y-%m-%d %H:%M') if user.created_at else '-' }}</p>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-header">Quick links</div>
+    <div class="card-body">
+        <a href="{{ url_for('student_jobs') }}" style="margin-right: 1rem;">Browse jobs by category</a>
+        <a href="{{ url_for('student_companies') }}">Browse jobs by company</a>
+    </div>
+</div>
+{% endblock %}

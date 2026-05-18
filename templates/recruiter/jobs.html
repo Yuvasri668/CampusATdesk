@@ -1,0 +1,121 @@
+{% extends "base.html" %}
+
+{% block title %}
+My Jobs - Recruiter - Job Board & Career Portal
+{% endblock %}
+
+{% block content %}
+
+<h1>Posted Jobs</h1>
+
+<p class="admin-subtitle">
+    {{ jobs|length }} job(s).
+</p>
+
+<p>
+    <a href="{{ url_for('recruiter_job_create') }}">
+        Create job
+    </a>
+</p>
+
+<div class="card">
+
+    <div class="card-header">
+        Jobs
+    </div>
+
+    <div class="card-body">
+
+        <table class="data-table">
+
+            <thead>
+
+                <tr>
+
+                    <th>ID</th>
+
+                    <th>Title</th>
+
+                    <th>Category</th>
+
+                    <th>Company</th>
+
+                    <th>Location</th>
+
+                    <th>Created</th>
+
+                    <th>Actions</th>
+
+                </tr>
+
+            </thead>
+
+            <tbody>
+
+                {% for job in jobs %}
+
+                <tr>
+
+                    <td>
+                        {{ job.id }}
+                    </td>
+
+                    <td>
+
+                        <a href="{{ url_for('recruiter_job_view', id=job.id) }}">
+                            {{ job.title }}
+                        </a>
+
+                    </td>
+
+                    <td>
+                        {{ job.category.name if job.category else '-' }}
+                    </td>
+
+                    <td>
+                        {{ job.company.name if job.company else '-' }}
+                    </td>
+
+                    <td>
+                        {{ job.location or '-' }}
+                    </td>
+
+                    <td>
+                        {{ job.created_at.strftime('%Y-%m-%d %H:%M') if job.created_at else '-' }}
+                    </td>
+
+                    <td>
+
+                        <a href="{{ url_for('recruiter_job_applications', job_id=job.id) }}">
+                            View applicants
+                        </a>
+
+                    </td>
+
+                </tr>
+
+                {% else %}
+
+                <tr>
+
+                    <td colspan="7">
+                        No jobs posted yet.
+                    </td>
+
+                </tr>
+
+                {% endfor %}
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+</div>
+
+<a href="{{ url_for('recruiter_dashboard') }}">
+    Back to Dashboard
+</a>
+
+{% endblock %}

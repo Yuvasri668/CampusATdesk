@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Job Board & Career Portal{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="navbar-brand">
+            <a href="{{ url_for('home') }}">Job Board</a>
+        </div>
+        <div class="navbar-menu">
+            {% if session.get('user_id') %}
+                {% if session.get('user_role') == 'admin' %}
+                <a href="{{ url_for('admin_dashboard') }}">Dashboard</a>
+                <a href="{{ url_for('admin_users') }}">Users</a>
+                <a href="{{ url_for('admin_companies') }}">Companies</a>
+                <a href="{{ url_for('admin_recruiters') }}">Recruiters</a>
+                <a href="{{ url_for('admin_students') }}">Students</a>
+                <a href="{{ url_for('admin_categories') }}">Categories</a>
+                {% elif session.get('user_role') == 'recruiter' %}
+                <a href="{{ url_for('recruiter_dashboard') }}">Dashboard</a>
+                <a href="{{ url_for('recruiter_jobs') }}">Jobs</a>
+                <a href="{{ url_for('recruiter_applications') }}">Applications</a>
+                {% elif session.get('user_role') == 'student' %}
+                <a href="{{ url_for('student_dashboard') }}">Dashboard</a>
+                <a href="{{ url_for('student_jobs') }}">Browse Jobs</a>
+                <a href="{{ url_for('student_applications') }}">My Applications</a>
+                {% endif %}
+            <a href="{{ url_for('logout') }}">Logout</a>
+            {% else %}
+            <a href="{{ url_for('login') }}">Sign in</a>
+            <a href="{{ url_for('register') }}">Join</a>
+            {% endif %}
+        </div>
+    </nav>
+
+    <div class="flash-container">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <ul class="flash-messages">
+                    {% for category, message in messages %}
+                        <li class="flash flash-{{ category }}">{{ message }}</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+        {% endwith %}
+    </div>
+
+    <main class="main-content">
+        {% block content %}{% endblock %}
+    </main>
+
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h4>General</h4>
+                <a href="{{ url_for('home') }}">Dashboard</a>
+            </div>
+            <div class="footer-section">
+                <h4>Account</h4>
+                {% if session.get('user_id') %}
+                <a href="{{ url_for('logout') }}">Sign out</a>
+                {% else %}
+                <a href="{{ url_for('login') }}">Sign in</a>
+                <a href="{{ url_for('register') }}">Join</a>
+                {% endif %}
+            </div>
+            <div class="footer-copy">
+                &copy; Job Board & Career Portal
+            </div>
+        </div>
+    </footer>
+</body>
+</html>

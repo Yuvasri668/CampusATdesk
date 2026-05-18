@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+
+{% block title %}Companies - Student - Job Board & Career Portal{% endblock %}
+
+{% block content %}
+<h1>Companies</h1>
+<p class="admin-subtitle">{{ companies|length }} company(ies).</p>
+
+<div class="card">
+    <div class="card-header">Companies</div>
+    <div class="card-body">
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Location</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for company in companies %}
+                <tr>
+                    <td>{{ company.id }}</td>
+                    <td>{{ company.name }}</td>
+                    <td>{{ company.location or '-' }}</td>
+                    <td><a href="{{ url_for('student_jobs_by_company', id=company.id) }}">View jobs</a></td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="4">No companies.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+<a href="{{ url_for('student_dashboard') }}">Back to Dashboard</a>
+{% endblock %}

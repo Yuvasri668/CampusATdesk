@@ -1,0 +1,150 @@
+{% extends "base.html" %}
+
+{% block title %}
+Students - Admin - Job Board & Career Portal
+{% endblock %}
+
+{% block content %}
+
+<h1>Students</h1>
+
+<p class="admin-subtitle">
+    {{ students|length }} student(s).
+</p>
+
+<div class="card">
+
+    <div class="card-header">
+        Students
+    </div>
+
+    <div class="card-body">
+
+        <table class="data-table">
+
+            <thead>
+
+                <tr>
+
+                    <th>ID</th>
+
+                    <th>Username</th>
+
+                    <th>Email</th>
+
+                    <th>Status</th>
+
+                    <th>Created</th>
+
+                    <th>Actions</th>
+
+                </tr>
+
+            </thead>
+
+            <tbody>
+
+                {% for user in students %}
+
+                <tr>
+
+                    <td>
+                        {{ user.id }}
+                    </td>
+
+                    <td>
+                        {{ user.username }}
+                    </td>
+
+                    <td>
+                        {{ user.email }}
+                    </td>
+
+                    <td>
+
+                        {% if user.is_active %}
+
+                            Active
+
+                        {% else %}
+
+                            Inactive
+
+                        {% endif %}
+
+                    </td>
+
+                    <td>
+
+                        {{ user.created_at.strftime('%Y-%m-%d %H:%M') if user.created_at else '-' }}
+
+                    </td>
+
+                    <td>
+
+                        <!-- ACTIVATE / DEACTIVATE -->
+
+                        {% if user.is_active %}
+
+                        <a href="{{ url_for('admin_student_status', id=user.id) }}">
+
+                            Deactivate
+
+                        </a>
+
+                        {% else %}
+
+                        <a href="{{ url_for('admin_student_status', id=user.id) }}">
+
+                            Activate
+
+                        </a>
+
+                        {% endif %}
+
+                        |
+
+                        <!-- DELETE -->
+
+                        <a
+                            href="{{ url_for('admin_student_delete', id=user.id) }}"
+                            onclick="return confirm('Are you sure you want to delete this student?')"
+                        >
+
+                            Delete
+
+                        </a>
+
+                    </td>
+
+                </tr>
+
+                {% else %}
+
+                <tr>
+
+                    <td colspan="6">
+
+                        No students found.
+
+                    </td>
+
+                </tr>
+
+                {% endfor %}
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+</div>
+
+<a href="{{ url_for('admin_dashboard') }}">
+
+    Back to Dashboard
+
+</a>
+
+{% endblock %}

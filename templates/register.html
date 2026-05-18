@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+
+{% block title %}Join - Job Board & Career Portal{% endblock %}
+
+{% block content %}
+<div class="auth-container">
+    <div class="auth-card">
+        <h1>Join now</h1>
+        <form class="auth-form" method="POST" action="{{ url_for('register') }}">
+            <div class="form-group">
+                <label for="username">Username</label>
+                <input type="text" id="username" name="username" value="{{ request.form.username if request.form else '' }}" required autocomplete="username">
+            </div>
+            <div class="form-group">
+                <label for="email">Email</label>
+                <input type="email" id="email" name="email" value="{{ request.form.email if request.form else '' }}" required autocomplete="email">
+            </div>
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" required autocomplete="new-password">
+            </div>
+            <div class="form-group">
+                <label for="confirm_password">Confirm Password</label>
+                <input type="password" id="confirm_password" name="confirm_password" required autocomplete="new-password">
+            </div>
+
+            <div class="form-group">
+    <label>Select Role</label>
+
+    <select name="role" required>
+        <option value="">Choose Role</option>
+        <option value="student">Student</option>
+        <option value="recruiter">Recruiter</option>
+    </select>
+</div>
+            <button type="submit" class="btn-primary">Join</button>
+        </form>
+        <div class="auth-footer">
+            <p>Already have an account? <a href="{{ url_for('login') }}">Sign in</a></p>
+        </div>
+    </div>
+</div>
+{% endblock %}

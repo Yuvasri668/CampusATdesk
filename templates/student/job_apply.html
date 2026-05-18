@@ -1,0 +1,74 @@
+{% extends "base.html" %}
+
+{% block title %}Apply - {{ job.title }} - Student - Job Board & Career Portal{% endblock %}
+
+{% block content %}
+<div class="apply-page">
+    <h1>Apply for this job</h1>
+    <p class="admin-subtitle">{{ job.title }}</p>
+
+    <div class="card job-summary-card">
+        <div class="card-header">Job details</div>
+        <div class="card-body">
+            <div class="job-summary-grid">
+                <div class="job-summary-item">
+                    <span class="job-summary-label">Location</span>
+                    <span class="job-summary-value">{{ job.location or '—' }}</span>
+                </div>
+                <div class="job-summary-item">
+                    <span class="job-summary-label">Job type</span>
+                    <span class="job-summary-value">{{ job.job_type or '—' }}</span>
+                </div>
+                <div class="job-summary-item">
+                    <span class="job-summary-label">Category</span>
+                    <span class="job-summary-value">{{ job.category.name if job.category else '—' }}</span>
+                </div>
+            </div>
+            {% if job.description %}
+            <div class="job-summary-desc">
+                <span class="job-summary-label">Description</span>
+                <p>{{ job.description }}</p>
+            </div>
+            {% endif %}
+            {% if job.required_skills %}
+            <div class="job-summary-desc">
+                <span class="job-summary-label">Required skills</span>
+                <p>{{ job.required_skills }}</p>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-header">Resume</div>
+        <div class="card-body">
+            <form class="auth-form apply-form" method="POST" action="{{ url_for('student_job_apply', job_id=job.id) }}" enctype="multipart/form-data">
+                <div class="form-group">
+                    <label for="resume">Upload a new resume</label>
+                    <span class="form-hint">PDF, DOC or DOCX. Max size may apply.</span>
+                    <input type="file" id="resume" name="resume" accept=".pdf,.doc,.docx" class="file-input">
+                </div>
+                {% if previous_applications %}
+                <div class="form-divider">
+                    <span>or</span>
+                </div>
+                <div class="form-group">
+                    <label for="use_existing_resume">Use resume from a previous application</label>
+                    <select id="use_existing_resume" name="use_existing_resume">
+                        <option value="new">I will upload a new resume above</option>
+                        {% for prev in previous_applications %}
+                        <option value="{{ prev.id }}">From: {{ prev.job.title }} ({{ prev.created_at.strftime('%Y-%m-%d') if prev.created_at else '-' }})</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                {% endif %}
+                <div class="form-actions">
+                    <button type="submit" class="btn-primary">Submit application</button>
+                    <a href="{{ url_for('student_jobs') }}" class="btn-secondary">Cancel</a>
+                </div>
+            </form>
+        </div>
+    </div>
+    <p class="back-link"><a href="{{ url_for('student_jobs') }}">← Back to jobs</a></p>
+</div>
+{% endblock %}

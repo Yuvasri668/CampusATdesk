@@ -1,0 +1,120 @@
+
+CREATE TABLE IF NOT EXISTS users (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    username VARCHAR(80) NOT NULL UNIQUE,
+    email VARCHAR(120) NOT NULL UNIQUE,
+    password VARCHAR(255) NOT NULL,
+    role VARCHAR(20) NOT NULL DEFAULT 'student',
+    company_id INT NULL,
+    is_active TINYINT(1) NOT NULL DEFAULT 1,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS companies (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(200) NOT NULL,
+    location VARCHAR(200) NULL,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS categories (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(100) NOT NULL UNIQUE,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS jobs (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    title VARCHAR(200) NOT NULL,
+    description TEXT NULL,
+    required_skills VARCHAR(500) NULL,
+    location VARCHAR(200) NULL,
+    job_type VARCHAR(100) NULL,
+    category_id INT NULL,
+    posted_by INT NOT NULL,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS applications (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    student_id INT NOT NULL,
+    job_id INT NOT NULL,
+    resume_path VARCHAR(500) NULL,
+    status VARCHAR(50) NOT NULL DEFAULT 'Applied',
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS test_table (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(255) NULL,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+
+DROP PROCEDURE IF EXISTS add_role_if_missing;
+DELIMITER //
+CREATE PROCEDURE add_role_if_missing()
+BEGIN
+    IF (SELECT COUNT(*) FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = 'users' AND COLUMN_NAME = 'role') = 0
+    THEN
+        ALTER TABLE users ADD COLUMN role VARCHAR(20) NOT NULL DEFAULT 'student';
+    END IF;
+END //
+DELIMITER ;
+CALL add_role_if_missing();
+DROP PROCEDURE add_role_if_missing;
+
+DROP PROCEDURE IF EXISTS add_company_fields_if_missing;
+DELIMITER //
+CREATE PROCEDURE add_company_fields_if_missing()
+BEGIN
+    IF (SELECT COUNT(*) FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = 'users' AND COLUMN_NAME = 'company_id') = 0
+    THEN
+        ALTER TABLE users ADD COLUMN company_id INT NULL;
+    END IF;
+    IF (SELECT COUNT(*) FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = 'users' AND COLUMN_NAME = 'is_active') = 0
+    THEN
+        ALTER TABLE users ADD COLUMN is_active TINYINT(1) NOT NULL DEFAULT 1;
+    END IF;
+END //
+DELIMITER ;
+CALL add_company_fields_if_missing();
+DROP PROCEDURE add_company_fields_if_missing;
+
+DROP PROCEDURE IF EXISTS add_job_fields_if_missing;
+DELIMITER //
+CREATE PROCEDURE add_job_fields_if_missing()
+BEGIN
+    IF (SELECT COUNT(*) FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = 'jobs' AND COLUMN_NAME = 'description') = 0
+    THEN
+        ALTER TABLE jobs ADD COLUMN description TEXT NULL;
+    END IF;
+    IF (SELECT COUNT(*) FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = 'jobs' AND COLUMN_NAME = 'required_skills') = 0
+    THEN
+        ALTER TABLE jobs ADD COLUMN required_skills VARCHAR(500) NULL;
+    END IF;
+    IF (SELECT COUNT(*) FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = 'jobs' AND COLUMN_NAME = 'job_type') = 0
+    THEN
+        ALTER TABLE jobs ADD COLUMN job_type VARCHAR(100) NULL;
+    END IF;
+END //
+DELIMITER ;
+CALL add_job_fields_if_missing();
+DROP PROCEDURE add_job_fields_if_missing;
+
+DROP PROCEDURE IF EXISTS add_application_fields_if_missing;
+DELIMITER //
+CREATE PROCEDURE add_application_fields_if_missing()
+BEGIN
+    IF (SELECT COUNT(*) FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = 'job_board_naive' AND TABLE_NAME = 'applications' AND COLUMN_NAME = 'resume_path') = 0
+    THEN
+        ALTER TABLE applications ADD COLUMN resume_path VARCHAR(500) NULL;
+    END IF;
+    IF (SELECT COUNT(*) FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = 'job_board_naive' AND TABLE_NAME = 'applications' AND COLUMN_NAME = 'updated_at') = 0
+    THEN
+        ALTER TABLE applications ADD COLUMN updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP;
+    END IF;
+END //
+DELIMITER ;
+CALL add_application_fields_if_missing();
+DROP PROCEDURE add_application_fields_if_missing;

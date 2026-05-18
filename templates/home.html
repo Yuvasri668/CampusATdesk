@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+{% block title %}Home - Job Board & Career Portal{% endblock %}
+
+{% block content %}
+<h1>Job Board & Career Portal</h1>
+<p>Welcome to Job Board & Career Portal.</p>
+
+<!-- Simple form: name field with server-side validation -->
+<form method="POST" action="{{ url_for('home') }}">
+    <label for="name">Your name (required):</label>
+    <input type="text" id="name" name="name" value="{{ request.form.name if request.form else '' }}" required>
+    <button type="submit">Submit</button>
+</form>
+<p><small>Leave the name empty and submit to see a validation error (flash message).</small></p>
+{% endblock %}

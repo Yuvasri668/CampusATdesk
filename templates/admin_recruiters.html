@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+
+{% block title %}Recruiters - Admin - Job Board & Career Portal{% endblock %}
+
+{% block content %}
+<h1>Recruiters</h1>
+<p class="admin-subtitle">{{ recruiters|length }} recruiter(s).</p>
+
+<div class="card">
+    <div class="card-header">Recruiters</div>
+    <div class="card-body">
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Username</th>
+                    <th>Email</th>
+                    <th>Created</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for user in recruiters %}
+                <tr>
+                    <td>{{ user.id }}</td>
+                    <td>{{ user.username }}</td>
+                    <td>{{ user.email }}</td>
+                    <td>{{ user.created_at.strftime('%Y-%m-%d %H:%M') if user.created_at else '-' }}</td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="4">No recruiters found.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+<a href="{{ url_for('admin_dashboard') }}">Back to Dashboard</a>
+{% endblock %}

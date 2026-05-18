@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+
+{% block title %}Companies - Admin - Job Board & Career Portal{% endblock %}
+
+{% block content %}
+<h1>Companies</h1>
+<p class="admin-subtitle">{{ companies|length }} compan{{ 'y' if companies|length == 1 else 'ies' }}.</p>
+
+<a href="{{ url_for('admin_company_create') }}" style="display: inline-block; margin-bottom: 1rem; color: var(--linkedin-blue); font-weight: 600;">Add Company</a>
+
+<div class="card">
+    <div class="card-header">Companies</div>
+    <div class="card-body">
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Location</th>
+                    <th>Created</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for c in companies %}
+                <tr>
+                    <td>{{ c.id }}</td>
+                    <td>{{ c.name }}</td>
+                    <td>{{ c.location or '-' }}</td>
+                    <td>{{ c.created_at.strftime('%Y-%m-%d %H:%M') if c.created_at else '-' }}</td>
+                    <td><a href="{{ url_for('admin_company_edit', id=c.id) }}">Edit</a></td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="5">No companies found.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+<a href="{{ url_for('admin_dashboard') }}">Back to Dashboard</a>
+{% endblock %}

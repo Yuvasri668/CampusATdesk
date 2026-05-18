@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+
+{% block title %}My Applications - Student - Job Board & Career Portal{% endblock %}
+
+{% block content %}
+<h1>My Applications</h1>
+<p class="admin-subtitle">{{ applications|length }} application(s).</p>
+<a href="{{ url_for('student_dashboard') }}">Dashboard</a> | <a href="{{ url_for('student_jobs') }}">Browse Jobs</a>
+
+<div class="card">
+    <div class="card-header">Application History</div>
+    <div class="card-body">
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>Job Title</th>
+                    <th>Company</th>
+                    <th>Status</th>
+                    <th>Applied</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for app in applications %}
+                <tr>
+                    <td>{{ app.job.title }}</td>
+                    <td>{{ app.job.company.name if app.job.company else '-' }}</td>
+                    <td>{{ app.status }}</td>
+                    <td>{{ app.created_at.strftime('%Y-%m-%d %H:%M') if app.created_at else '-' }}</td>
+                    <td>
+                        {% if app.status not in ['Rejected', 'Hired', 'Withdrawn'] %}
+                        <a href="{{ url_for('student_application_edit', id=app.id) }}">Edit resume</a>
+                        {% if app.status == 'Applied' %}
+                        <form method="POST" action="{{ url_for('student_application_withdraw', id=app.id) }}" style="display:inline;">
+                            <button type="submit">Withdraw</button>
+                        </form>
+                        {% endif %}
+                        {% endif %}
+                    </td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="5">No applications yet.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

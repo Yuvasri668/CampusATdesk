@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+
+{% block title %}Admin Dashboard - Job Board & Career Portal{% endblock %}
+
+{% block content %}
+<h1>Admin Dashboard</h1>
+<p class="admin-subtitle">Monitor platform users and activity.</p>
+
+<div class="admin-stats">
+    <div class="admin-stat-card">
+        <h3>Total Users</h3>
+        <p>{{ users_count }}</p>
+        <a href="{{ url_for('admin_users') }}">View all users</a>
+    </div>
+    <div class="admin-stat-card">
+        <h3>Recruiters</h3>
+        <p>{{ recruiters_count }}</p>
+        <a href="{{ url_for('admin_recruiters') }}">View recruiters</a>
+    </div>
+    <div class="admin-stat-card">
+        <h3>Students</h3>
+        <p>{{ students_count }}</p>
+        <a href="{{ url_for('admin_students') }}">View students</a>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-header">Quick links</div>
+    <div class="card-body">
+        <a href="{{ url_for('admin_users') }}" style="margin-right: 1rem;">All Users</a>
+        <a href="{{ url_for('admin_recruiters') }}" style="margin-right: 1rem;">Recruiters</a>
+        <a href="{{ url_for('admin_students') }}">Students</a>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+
+{% block title %}Applicants - {{ job.title }} - Recruiter - Job Board & Career Portal{% endblock %}
+
+{% block content %}
+<h1>Applicants for: {{ job.title }}</h1>
+<p class="admin-subtitle">{{ applications|length }} applicant(s).</p>
+<a href="{{ url_for('recruiter_jobs') }}">Back to Jobs</a>
+
+<div class="card">
+    <div class="card-header">Applicants</div>
+    <div class="card-body">
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Student ID</th>
+                    <th>Status</th>
+                    <th>Created</th>
+                    <th>Resume</th>
+                    <th>Update Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for app in applications %}
+                <tr>
+                    <td>{{ app.id }}</td>
+                    <td>{{ app.student_id }}</td>
+                    <td>{{ app.status }}</td>
+                    <td>{{ app.created_at.strftime('%Y-%m-%d %H:%M') if app.created_at else '-' }}</td>
+                    <td>{% if app.resume_path %}<a href="{{ url_for('recruiter_application_resume', id=app.id) }}">Download</a>{% else %}—{% endif %}</td>
+                    <td>
+                        {% if app.status in ['Rejected', 'Hired', 'Withdrawn'] %}
+                        {{ app.status }}
+                        {% else %}
+                        <form method="POST" action="{{ url_for('recruiter_application_update_status', id=app.id) }}" style="display:inline;">
+                            <select name="status" onchange="this.form.submit()">
+                                {% for s in statuses %}
+                                <option value="{{ s }}" {{ 'selected' if app.status == s else '' }}>{{ s }}</option>
+                                {% endfor %}
+                            </select>
+                        </form>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="6">No applicants yet.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

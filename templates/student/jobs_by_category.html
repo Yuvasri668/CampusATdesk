@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+
+{% block title %}Jobs by Category - Student - Job Board & Career Portal{% endblock %}
+
+{% block content %}
+<h1>Browse Jobs by Category</h1>
+
+{% for category in categories %}
+<div class="card">
+    <div class="card-header">{{ category.name }} <a href="{{ url_for('student_jobs_by_category', id=category.id) }}" style="font-size: 0.875rem; font-weight: 500;">View jobs</a></div>
+    <div class="card-body">
+        {% if category.jobs %}
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Title</th>
+                    <th>Location</th>
+                    <th>Job Type</th>
+                    <th>Created</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for job in category.jobs %}
+                <tr>
+                    <td>{{ job.id }}</td>
+                    <td>{{ job.title }}</td>
+                    <td>{{ job.location or '-' }}</td>
+                    <td>{{ job.job_type or '-' }}</td>
+                    <td>{{ job.created_at.strftime('%Y-%m-%d %H:%M') if job.created_at else '-' }}</td>
+                    <td><a href="{{ url_for('student_job_apply', job_id=job.id) }}">Apply</a></td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <p>No jobs in this category.</p>
+        {% endif %}
+    </div>
+</div>
+{% else %}
+<div class="card">
+    <div class="card-body">
+        <p>No categories or jobs.</p>
+    </div>
+</div>
+{% endfor %}
+<a href="{{ url_for('student_dashboard') }}">Back to Dashboard</a>
+{% endblock %}

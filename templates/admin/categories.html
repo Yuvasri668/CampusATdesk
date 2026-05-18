@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+
+{% block title %}Job Categories - Admin - Job Board & Career Portal{% endblock %}
+
+{% block content %}
+<h1>Job Categories</h1>
+<p class="admin-subtitle">{{ categories|length }} categor{{ 'y' if categories|length == 1 else 'ies' }}.</p>
+
+<a href="{{ url_for('admin_category_create') }}" style="display: inline-block; margin-bottom: 1rem; color: var(--linkedin-blue); font-weight: 600;">Add Category</a>
+
+<div class="card">
+    <div class="card-header">Categories</div>
+    <div class="card-body">
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Created</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for c in categories %}
+                <tr>
+                    <td>{{ c.id }}</td>
+                    <td><a href="{{ url_for('admin_category_view', id=c.id) }}">{{ c.name }}</a></td>
+                    <td>{{ c.created_at.strftime('%Y-%m-%d %H:%M') if c.created_at else '-' }}</td>
+                    <td>
+                        <a href="{{ url_for('admin_category_view', id=c.id) }}">View</a> |
+                        <a href="{{ url_for('admin_category_edit', id=c.id) }}">Edit</a>
+                    </td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="4">No categories found.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+<a href="{{ url_for('admin_dashboard') }}">Back to Dashboard</a>
+{% endblock %}

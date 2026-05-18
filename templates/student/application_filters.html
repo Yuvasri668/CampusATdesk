@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+
+{% block title %}Filter Applications - Student - Job Board & Career Portal{% endblock %}
+
+{% block content %}
+<h1>Applications by status</h1>
+<p class="admin-subtitle">Filter: {{ current_status or 'All' }}</p>
+
+<div class="card">
+    <div class="card-body">
+        <p>Show:</p>
+        <a href="{{ url_for('student_application_filter') }}" style="margin-right: 0.75rem;">All</a>
+        {% for s in statuses %}
+        <a href="{{ url_for('student_application_filter', status=s) }}" style="margin-right: 0.75rem;">{{ s }}</a>
+        {% endfor %}
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-header">Applications</div>
+    <div class="card-body">
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Job</th>
+                    <th>Company</th>
+                    <th>Status</th>
+                    <th>Created</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for app in applications %}
+                <tr>
+                    <td>{{ app.id }}</td>
+                    <td>{{ app.job.title }}</td>
+                    <td>{{ app.job.poster.company.name if app.job.poster and app.job.poster.company else '-' }}</td>
+                    <td>{{ app.status }}</td>
+                    <td>{{ app.created_at.strftime('%Y-%m-%d %H:%M') if app.created_at else '-' }}</td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="5">No applications.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+<a href="{{ url_for('student_dashboard') }}">Back to Dashboard</a>
+{% endblock %}
